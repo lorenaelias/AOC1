@@ -1,0 +1,26 @@
+.data
+	array: .space 84 #(4bytes*21 posicoes)
+
+.text
+
+MAIN:
+	add	$t0, $zero, $zero	# (t0 <- 0)
+	add	$t1, $zero, $zero	# (t1 <- 0)
+LOOP:
+	# se chegou no fim do array, finaliza
+	beq	$t0, 84, FIM
+	
+	# senao
+	addi	$t1, $t1, 1	# contador da iteracao i++
+	addi	$t3, $zero, 42	# (t3 <- 42)
+	mul	$t3, $t3, $t1	# resultado que sera guardado no array (42*i)
+	sw	$t3,array($t0)
+	
+	addi	$t0, $t0, 4	#caminhar de 4 em 4bytes (1 int)
+	
+	j	LOOP
+	
+FIM:
+	# termina
+	li	$v0, 10
+	syscall

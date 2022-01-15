@@ -1,0 +1,64 @@
+1.
+	add  -	adiciona a soma de dois valores em registradores, guarda em um registrador (rd)
+	R	bit(31)|operation code| rs | rt | rd |shift amount|function code| bit (0)
+
+	addi -	adiciona um valor imediato (constante) a um valor em outro registrador, guarda em um registrador (rd)
+	I	bit(31)|operation code| rs | rt |immediate cte(16 bits)| bit(0)
+2.
+	A instrução j reserva 26bits para o endereço do jump
+	J	bit(31)|operation code| constante| bit(0)
+
+3.	jal serve para pular para uma label e guardar o endereço de onde foi chamada em $ra
+	jr  serve para pular para um endereço guardado em um registrador
+	São muito importantes para nao se perder o endereço da rotina chamadora quando há mais de um jump.
+
+4.	
+	$s0-$s7:	guarda os valores que precisam ser salvos
+	$t0-$t7:	guarda os valores temporarios
+	$pc:		guarda o endereço da proxima instrucao
+	$sp:		guarda o endereço do topo de uma pilha		
+	$ra:    	guarda o endereço quando se chama a instrucao jal
+	$zero:  	guarda 0
+	$a0-a3:		guarda os argumentos que serao passados para um label
+	$v0-v1:		guarda os valores de retorno de uma label
+	$hi:		guarda os 16 MSB
+	$lo:		guarda os 16 LSB
+	$at:		(assembler temporary) usado somente quando pseudoinstruc
+
+5.	
+	a)  add 	$t0, $zero, $zero 	#t0 == a
+	b)  addi	$t1, $zero, 42		#t1 == b
+	
+	c)  add		$t2, $t0, $t1		#t2==aux t0==b t1==c
+	    sub		$t3, $t1, $t5		#t3==aux2 t1==c t5==d 
+	    div		$t0, $t2, $t3		#t0==a t2==aux t3==aux2
+
+6.
+	sll	shift left logical
+	slt	set less than
+
+8.
+	Instrução nativas
+	conjunto minimo de instrucoes com que se pode implementar qualquer coisa
+	slt, bne, add
+	
+	Pseudoinstruções
+	juncao de duas ou mais instrucoes nativas para facilitar a implementação
+	blt -> slt+bne, li/la-> lui+ori, move-> add
+
+9.
+	li	$rs, cte
+	carrega a cte em rs
+
+	la	$rs, $rt
+	carrega o conteudo de rt em rs
+
+11.
+	2^(28) bytes
+	Quando fazemos endereçamento, sempre endereçamos bytes (4 bits), nunca bits.
+Sendo assim, os dois LSB são sempre 00. Então, eles não são usados. 
+Não é possivel pular direto para 0xFFFFFFFF. Para isso, podemos fazer
+saltos intermediários para encurtar a distança de 0x04000000 para 0xFFFFFFFF.
+	modelo do adds:
+	(4bits)PC | (26bits)j adds | (2bits)00 
+		

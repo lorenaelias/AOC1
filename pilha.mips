@@ -1,0 +1,71 @@
+#########################################################
+#							#
+# programa que lê um numero inteiro nao sinalizado e 	#
+# testa se ele eh par ou impar				#
+#							#
+#########################################################
+
+.data
+str1: 	.asciiz "Digite um numero:"	
+str2: 	.asciiz "Numero: "
+str3: 	.asciiz "Par"
+str4: 	.asciiz "Impar"
+
+.text
+
+MAIN:
+	#imprime str
+	li	$v0, 4
+	la	$a0, str1
+	syscall
+	
+	# le int
+	li	$v0, 5
+	syscall
+	
+	# chama parimpar
+	add	$a0, $zero, $v0 # mandar o int lido como arg
+	jal	PARIMPAR
+	
+	#depois que volta de PARIMPAR
+	add	$s0, $zero, $v0 # salva retorno da funcao
+	
+	#imprime str2
+	li 	$v0, 4
+	la	$a0, str2
+	syscall
+	
+	beq $s0, $zero, PAR
+IMPAR:
+	li	$v0, 4
+	la	$a0, str4
+	syscall
+	
+	j	FIM
+	
+PAR:
+	li	$v0, 4
+	la	$a0, str3
+	syscall
+SAI:
+	#termina o programa
+	li	$v0, 10
+	syscall
+
+#funcao que teste se numero e par ou impar
+#retorna 0 se par, 1 se impar
+PARIMPAR:
+	# guardamos em pilha o que nao queremos que seja modificado
+	#pushs
+	addi	$sp, $sp, -8 ¨#alocando 8 bytes 8 vai ser o fim! nao podemos inserir em 8($sp)
+	sw	$ra, 4($sp)
+	sw	$a0, 0($sp)
+	
+	addi	$t7, $zero, 1
+	and	$v0, $a0, $t7
+	#pops
+	lw	$ra, 4($sp)
+	lw	$a0, 0($sp)
+	addi	$sp, $sp, 8  #desalocando
+	
+	jr $ra

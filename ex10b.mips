@@ -1,0 +1,82 @@
+.data
+	str: .asciiz "\nR: "
+.text
+MAIN:
+	addi 	$t0, $zero, 4	# b
+	addi	$t1, $zero, 5	# exp
+	
+	add	$a0, $zero, $t0
+	add	$a1, $zero, $t1
+	
+	jal	E
+	
+	add	$t3, $zero, $v0
+	
+	#printa str
+	li	$v0, 4
+	la	$a0, str
+	syscall
+	
+	# printa R
+	li	$v0, 1
+	add	$a0, $zero, $t3
+	syscall
+	
+	#termina o programa
+	li	$v0,10
+	syscall
+	
+M:	
+	add	$s7, $zero, $ra	# endereço pra voltar pra main
+	add	$s0, $zero, $a0	# a
+	add	$s1, $zero, $a1	# b
+	add	$s2, $zero, $s0	# i
+	addi	$s3, $zero, 0 	# r
+	
+	#se s2 maior que 0
+	bgtz 	$s2, LOOP1
+	
+	#senao
+	add	$v0, $zero, $s3
+	jr	$s7
+
+LOOP1:
+	# enquanto s2 for diferente de 0 faz isso
+	add	$s3, $s3, $s1
+	addi	$s2, $s2, -1
+	bgtz 	$s2, LOOP1
+	
+	# quando ele ficar igual a zero
+	add	$v0, $zero, $s3
+	jr	$s7
+	
+
+E:
+	add	$s6, $zero, $ra		# volta pra main
+	add	$t0, $zero, $a0	# b
+	add	$t1, $zero, $a1	# i
+	add	$t2, $zero, $t0	# r
+	
+	# se i maior que 1
+	bgt	$t1, 1, LOOP2
+	
+	# senao
+	add	$v0, $zero, $t2
+	jr	$s6
+	
+LOOP2:
+	# enquanto s2 for diferente de 0 faz isso
+	addi	$t1, $t1, -1
+	
+	add	$a0, $zero, $t2
+	add	$a1, $zero, $t0
+	jal	M
+	
+	add	$t2, $zero, $v0
+	
+	bgt 	$t1, 1, LOOP2
+	
+	# quando ele ficar igual a zero
+	add	$v0, $zero, $t2
+	jr	$s6
+	

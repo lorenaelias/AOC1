@@ -1,0 +1,26 @@
+# calcula N da Fibonacci
+
+MAIN:
+	addi	$v0, $zero, 5	#ler o N
+	syscall
+	add	$s1, $zero, $v0	#jogar o valor lido em s0
+	
+	add	$s2, $zero, $zero # p n-1
+	add	$s3, $zero, $zero # p n-2
+	
+	addi	$s4, $zero, 1 # acc
+	
+FIBO:
+    	addi $s2, $s2, 1  # s2++
+    	add $s5, $s3, $s4 # make the current result the sum of the last two fib numbers
+    	addi, $s4, $s3, 0 # make the second most recent fib number equal to the most recent fib number
+    	addi, $s3, $s5, 0 # make the most recent fib number equal to the current fib number
+  	bne $s2, $s1, FIBO
+	
+FIM:	
+	addi	$v0, $zero, 1
+	la	$a0, ($s0)
+	syscall
+	
+	addi	$v0, $zero, 10
+	syscall
